@@ -34,10 +34,6 @@ lang_buttons = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 for code, name in languages.items():
     lang_buttons.add(KeyboardButton(name))
 
-# Постійна кнопка "Рестарт бот"
-restart_button = InlineKeyboardMarkup().add(
-    InlineKeyboardButton("🔄 Рестарт бот", callback_data="restart_bot")
-)
 
 # Кнопки після вибору мови
 start_markup = InlineKeyboardMarkup(row_width=2)
