@@ -11,6 +11,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import logging
+import json
 
 API_TOKEN = '7978588767:AAFn6S40YOG470r0hzJoDR90nv9ggJ3wGf0'
 
@@ -108,6 +109,16 @@ async def send_instruction(callback_query: types.CallbackQuery):
 async def restart(callback_query: types.CallbackQuery, state: FSMContext):
     await state.finish()
     await cmd_start(callback_query.message)
+
+# ✅ Обробка WebAppData
+@dp.message_handler(content_types=types.ContentType.WEB_APP_DATA)
+async def web_app_data_handler(message: types.Message):
+    try:
+        data = json.loads(message.web_app_data.data)
+        user_id = message.from_user.id
+        await message.answer(f"✅ Дані отримано від WebApp:\n\n<pre>{json.dumps(data, indent=2, ensure_ascii=False)}</pre>", parse_mode='HTML')
+    except Exception as e:
+        await message.answer(f"❌ Помилка обробки даних з WebApp: {e}")
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
