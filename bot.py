@@ -30,7 +30,7 @@ languages = {
 
 translations = {
     "start_text": {
-        "uk": "👋 Вітаю тебе в сигнальному боті для слотів у казино! ...",
+        "uk": "👋 Вітаю в сигнальному боті слотів! Тут штучний інтелект дає 95% точних прогнозів — це твій шлях до великих грошей! 💸 З таким заробітком можна й на роботу забити — тільки виграші та свобода! 🚀 🔥 Готовий розбагатіти? Тоді поїхали! 🎰💰",
         "ru": "👋 Добро пожаловать в сигнального бота для слотов в казино! ...",
         "en": "👋 Welcome to the signal bot for casino slots! ..."
     },
@@ -136,6 +136,11 @@ async def send_instruction(callback_query: types.CallbackQuery, state: FSMContex
             InlineKeyboardButton(translations["predict_button"][lang], web_app=WebAppInfo(url="https://slot-bot-webapp.vercel.app/"))
         )
     )
+
+@dp.message_handler(lambda message: message.text.startswith("🔄"))
+async def restart_bot(message: types.Message, state: FSMContext):
+    await state.finish()  # Скидаємо FSM
+    await cmd_start(message)
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
