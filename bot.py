@@ -144,6 +144,8 @@ translations = {
     }
 }
 
+REGISTRATION_URL = "https://1wfzws.life/v3/aggressive-casino?p=aon0"  # твій лінк
+
 lang_buttons = ReplyKeyboardMarkup(resize_keyboard=True)
 for code, name in languages.items():
     lang_buttons.add(KeyboardButton(name))
@@ -170,7 +172,7 @@ async def set_language(message: types.Message, state: FSMContext):
     # Кнопки після вибору мови
     start_markup = InlineKeyboardMarkup(row_width=2)
     start_markup.add(
-        InlineKeyboardButton(translations["register_button"][selected_lang], url="https://slot-bot-webapp.vercel.app/"),
+        InlineKeyboardButton(translations["register_button"][selected_lang], url=REGISTRATION_URL),
         InlineKeyboardButton(translations["success_button"][selected_lang], callback_data="after_register")
     )
 
@@ -182,21 +184,18 @@ async def after_register(callback_query: types.CallbackQuery, state: FSMContext)
     user_data = await state.get_data()
     lang = user_data.get("language", "uk")
 
-    # Кнопки основного меню
+    # Кнопки основного меню (реєстрація завжди тут)
     main_markup = InlineKeyboardMarkup(row_width=2)
     main_markup.add(
+        InlineKeyboardButton(translations["register_button"][lang], url=REGISTRATION_URL),
         InlineKeyboardButton(translations["instruction_button"][lang], callback_data="instruction"),
         InlineKeyboardButton(
             text=translations["predict_button"][lang],
-            web_app=WebAppInfo(url="https://slot-bot-webapp.vercel.app/")
+            web_app=WebAppInfo(url=REGISTRATION_URL)
         )
     )
 
     await callback_query.message.edit_text(translations["after_register_text"][lang], reply_markup=main_markup)
-
-    restart_markup = ReplyKeyboardMarkup(resize_keyboard=True)
-    restart_markup.add(KeyboardButton(translations["restart_button"][lang]))
-    await bot.send_message(callback_query.from_user.id, translations["restart_button"][lang], reply_markup=restart_markup)
 
 @dp.callback_query_handler(lambda c: c.data == 'instruction', state='*')
 async def send_instruction(callback_query: types.CallbackQuery, state: FSMContext):
@@ -206,14 +205,9 @@ async def send_instruction(callback_query: types.CallbackQuery, state: FSMContex
     await callback_query.message.edit_text(
         translations["instruction_text"][lang],
         reply_markup=InlineKeyboardMarkup().add(
-            InlineKeyboardButton(translations["predict_button"][lang], web_app=WebAppInfo(url="https://slot-bot-webapp.vercel.app/"))
+            InlineKeyboardButton(translations["predict_button"][lang], web_app=WebAppInfo(url=REGISTRATION_URL))
         )
     )
-
-@dp.message_handler(lambda message: message.text.startswith("🔄"))
-async def restart_bot(message: types.Message, state: FSMContext):
-    await state.finish()  # Скидаємо FSM
-    await cmd_start(message)
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
