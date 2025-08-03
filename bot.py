@@ -144,7 +144,8 @@ translations = {
     }
 }
 
-REGISTRATION_URL = "https://1wfzws.life/v3/aggressive-casino?p=aon0"  # твій лінк
+REGISTRATION_URL = "https://1wfzws.life/v3/aggressive-casino?p=aon0" 
+REGISTRATION_URL1 = "https://slot-bot-webapp.vercel.app/"
 
 lang_buttons = ReplyKeyboardMarkup(resize_keyboard=True)
 for code, name in languages.items():
@@ -205,7 +206,7 @@ async def send_instruction(callback_query: types.CallbackQuery, state: FSMContex
     await callback_query.message.edit_text(
         translations["instruction_text"][lang],
         reply_markup=InlineKeyboardMarkup().add(
-            InlineKeyboardButton(translations["predict_button"][lang], web_app=WebAppInfo(url=REGISTRATION_URL))
+            InlineKeyboardButton(translations["predict_button"][lang], web_app=WebAppInfo(url=REGISTRATION_URL1))
         )
     )
 
